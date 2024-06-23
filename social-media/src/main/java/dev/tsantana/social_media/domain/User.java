@@ -1,9 +1,18 @@
 package dev.tsantana.social_media.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
@@ -12,19 +21,34 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @NoArgsConstructor
+@Entity
+@Table(name = "TB_USER")
 public class User {
 
 	@Include
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String email;
 	private LocalDate birth;
 	private String gender;
 	private String photoUri;
+
+	@OneToMany(cascade = CascadeType.ALL)
 	private Set<User> followers = new HashSet<User>();
+
+	@OneToMany(cascade = CascadeType.ALL)
 	private Set<User> followed = new HashSet<User>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Post> posts = new HashSet<Post>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Album> albums = new HashSet<Album>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Photo> photos = new ArrayList<Photo>();
 
 	public User(Long id, String name, String email, LocalDate birth, String gender, String photoUri) {
 		super();
@@ -60,6 +84,22 @@ public class User {
 		this.photoUri = photoUri;
 	}
 
+	public void addPost(Post post) {
+		this.posts.add(post);
+	}
+
+	public void removePost(Post post) {
+		this.posts.remove(post);
+	}
+
+	public void addAlbum(Album album) {
+		this.albums.add(album);
+	}
+
+	public void removeAlbum(Album album) {
+		this.albums.remove(album);
+	}
+
 	private void addFollower(User user) {
 		this.followers.add(user);
 	}
@@ -77,26 +117,19 @@ public class User {
 		this.followed.remove(user);
 	}
 
-	public void addPost(Post post) {
-		this.posts.add(post);
+	public void addPhotos(Photo photo) {
+		this.photos.add(photo);
 	}
-
-	public void removePost(Post post) {
-		this.posts.remove(post);
+	
+	public void removePhotos(Photo photo) {
+		this.photos.remove(photo);
 	}
-
-	public void addAlbum(Album album) {
-		this.albums.add(album);
-	}
-
-	public void removeAlbum(Album album) {
-		this.albums.remove(album);
-	}
-
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", birth=" + birth + ", gender=" + gender
-				+ ", photoUri=" + photoUri + ", posts=" + posts + ", albums=" + albums + "]";
+				+ ", photoUri=" + photoUri + ", posts=" + posts + "]";
 	}
 
+	
 }
