@@ -39,6 +39,13 @@ public class UserRepositoryTests {
 	}
 
 	@Test
+	public void deleteShouldDoNothingWhenIdNonExists() {
+		Assertions.assertDoesNotThrow(() -> {
+			repository.deleteById(existingId);
+		});
+	}
+
+	@Test
 	public void saveShouldPersistWithAutoIncrementWhenIdIsNull() {
 
 		User user = Factory.createUser();
