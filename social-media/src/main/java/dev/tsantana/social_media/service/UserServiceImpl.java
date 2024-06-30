@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,13 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly = true)
 	@Override
+	public Page<User> findAllPaged(Pageable pageable) {
+		Page<User> result = userRepository.findAll(pageable);
+		return result;
+	}
+
+	@Transactional(readOnly = true)
+	@Override
 	public User findById(Long userId) {
 		User entity = userRepository.findById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Entity not found."));
@@ -47,19 +57,22 @@ public class UserServiceImpl implements UserService {
 			user.setId(entity.getId());
 			BeanUtils.copyProperties(user, entity);
 			entity = userRepository.save(user);
+			return entity;
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException("Id not found: " + userId);
 		}
-		return entity;
+
 	}
 
 	@Transactional(propagation = Propagation.SUPPORTS)
 	@Override
 	public void deleteById(Long userId) {
-		if (!userRepository.existsById(userId)) {
+		try {
+			userRepository.deleteById(userId);
+		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException("Id not found: " + userId);
 		}
-		userRepository.deleteById(userId);
+
 	}
 
 }
