@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Transactional
 	@Override
 	public User insert(User user) {
 		User result = userRepository.save(user);
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
 		return entity;
 	}
 
+	@Transactional
 	@Override
 	public User update(Long userId, User user) {
 		User entity = new User();
@@ -72,6 +74,32 @@ public class UserServiceImpl implements UserService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException("Id not found: " + userId);
 		}
+
+	}
+
+	@Override
+	public void follow(Long userId, Long followedId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+		User followed = userRepository.findById(followedId)
+				.orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+		user.addFollowed(followed);
+
+		user = userRepository.save(user);
+
+	}
+
+	@Override
+	public void unfollow(Long userId, Long followedId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+		User followed = userRepository.findById(followedId)
+				.orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+		user.removeFollowed(followed);
+
+		user = userRepository.save(user);
 
 	}
 

@@ -14,7 +14,7 @@ public interface UserService {
 	User insert(User user);
 
 	List<User> findAll();
-	
+
 	Page<User> findAllPaged(Pageable pageable);
 
 	User findById(Long userId);
@@ -22,4 +22,8 @@ public interface UserService {
 	User update(Long userId, User user);
 
 	void deleteById(Long userId);
+
+	void follow(Long userId, Long followedId);
+
+	void unfollow(Long userId, Long followedId);
 }
