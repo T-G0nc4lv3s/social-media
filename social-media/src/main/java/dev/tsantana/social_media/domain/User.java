@@ -121,6 +121,7 @@ public class User {
 	}
 
 	public void removeFollowed(User user) {
+		user.removeFollower(this);
 		this.followed.remove(user);
 	}
 
