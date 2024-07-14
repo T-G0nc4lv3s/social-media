@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +17,9 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
 @Entity
 @Table(name = "TB_POST")
 public class Post {
@@ -30,16 +29,23 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String text;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant date;
+
+	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+	private Instant updated;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Set<Photo> photos = new HashSet<Photo>();
+
+	public Post() {
+		this.date = Instant.now();
+	}
 
 	public Post(Long id, String text, User user) {
 		super();
@@ -60,6 +66,10 @@ public class Post {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public void setUpdated(Instant updated) {
+		this.updated = updated;
 	}
 
 	public void addPhoto(Photo photo) {
