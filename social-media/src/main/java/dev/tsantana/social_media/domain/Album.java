@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +17,9 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
 @Entity
 @Table(name = "TB_ALBUM")
 public class Album {
@@ -30,16 +29,23 @@ public class Album {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant date;
+
+	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+	private Instant updated;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "album")
+	@OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
 	private Set<Photo> photos = new HashSet<Photo>();
+
+	public Album() {
+		this.date = Instant.now();
+	}
 
 	public Album(Long id, String title, User user) {
 		super();
@@ -56,6 +62,14 @@ public class Album {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setUpdated(Instant updated) {
+		this.updated = updated;
 	}
 
 	public void addPhotos(Photo photo) {
