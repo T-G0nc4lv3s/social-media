@@ -53,6 +53,18 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PutMapping(value = "/{userId}/follow")
+	public ResponseEntity<Void> follow(@PathVariable Long userId, @RequestBody Long followedId) {
+		userService.follow(userId, followedId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping(value = "/{userId}/unfollow")
+	public ResponseEntity<Void> unfollow(@PathVariable Long userId, @RequestBody Long followedId) {
+		userService.unfollow(userId, followedId);
+		return ResponseEntity.noContent().build();
+	}
+
 	@DeleteMapping(value = "/{userId}")
 	public ResponseEntity<Void> delete(@PathVariable Long userId) {
 		userService.deleteById(userId);
