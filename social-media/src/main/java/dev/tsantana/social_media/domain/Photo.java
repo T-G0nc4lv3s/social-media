@@ -1,5 +1,8 @@
 package dev.tsantana.social_media.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,12 +29,15 @@ public class Photo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String uri;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "album_id")
 	private Album album;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "post_id")
 	private Post post;
