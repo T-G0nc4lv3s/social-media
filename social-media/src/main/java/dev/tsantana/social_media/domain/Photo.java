@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Photo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
 	@Column(nullable = false)
 	private String uri;
 
@@ -42,6 +44,7 @@ public class Photo {
 	@JoinColumn(name = "post_id")
 	private Post post;
 
+	@NotBlank
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;

@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
@@ -30,12 +32,15 @@ public class Post {
 	private Long id;
 	private String text;
 
+	@PastOrPresent
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant date;
 
+	@PastOrPresent
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant updated;
 
+	@NotBlank
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

@@ -1,6 +1,7 @@
 package dev.tsantana.social_media.DTO;
 
 import dev.tsantana.social_media.domain.Photo;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class InsertPhotoDTO {
 
 	private String uri;
+
+	@NotBlank
 	private Long userId;
 	private Long postId;
 	private Long albumId;
