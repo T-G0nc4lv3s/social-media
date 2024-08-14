@@ -37,8 +37,8 @@ classDiagram
         +User user
     }
 
-  User --> Post
-  User --> Album
+  User *-- Post
+  User *-- Album
   Album --> Photo
   Post --> Photo
 ```
