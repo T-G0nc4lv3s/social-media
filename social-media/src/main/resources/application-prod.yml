@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${HOST}:${PORT}/${DATABASE:railway}
+    username: ${USER}
+    password: ${PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
