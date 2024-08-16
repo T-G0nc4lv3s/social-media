@@ -2,6 +2,8 @@ package dev.tsantana.social_media.controller.exception;
 
 import java.time.Instant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+	private final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ValidationError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
@@ -41,6 +45,20 @@ public class ControllerExceptionHandler {
 		err.setMessage(e.getMessage());
 		err.setError("Entity not found");
 		err.setPath(request.getRequestURI());
+
+		return ResponseEntity.status(status).body(err);
+	}
+
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<StandardError> unexpectedException(Throwable e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		StandardError err = new StandardError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(status.value());
+		err.setMessage(e.getMessage());
+		err.setError("Unexpected server error, see the logs.");
+		err.setPath(request.getRequestURI());
+		logger.error(err.getError(), e);
 
 		return ResponseEntity.status(status).body(err);
 	}
